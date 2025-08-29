@@ -9,7 +9,9 @@ const API_KEY = process.env.NEWS_API_KEY; // 🔑 load from environment
 app.use(cors());
 
 app.get("/api/news", async (req, res) => {
-  const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`;
+  const { country = "us", category = "general" } = req.query;
+  const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${API_KEY}`;
+
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -19,6 +21,7 @@ app.get("/api/news", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch news" });
   }
 });
+
 
 // Required for Vercel health check
 app.get("/", (req, res) => {
